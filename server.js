@@ -9,7 +9,25 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// Allow only the admin frontends to access API via CORS
+const allowedOrigins = [
+  "https://admin.music-shop.uz",
+  "https://www.admin.music-shop.uz",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
