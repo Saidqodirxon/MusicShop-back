@@ -38,7 +38,12 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const uploadsPath = path.join(__dirname, "uploads");
-console.log("Serving uploads from:", uploadsPath, "exists:", fs.existsSync(uploadsPath));
+console.log(
+  "Serving uploads from:",
+  uploadsPath,
+  "exists:",
+  fs.existsSync(uploadsPath)
+);
 app.use("/uploads", express.static(uploadsPath));
 
 // Database connection
