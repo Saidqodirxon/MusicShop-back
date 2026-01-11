@@ -9,19 +9,7 @@ const upload = require("../middleware/upload");
 // @access  Public
 router.get("/", async (req, res) => {
   try {
-    const banners = await Banner.find().sort({ order: 1, createdAt: -1 });
-    res.json(banners);
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
-// @route   GET api/banners/active
-// @desc    Get all active banners
-// @access  Public
-router.get("/active", async (req, res) => {
-  try {
-    const banners = await Banner.find({ isActive: true }).sort({ order: 1 });
+    const banners = await Banner.find().sort({ createdAt: -1 });
     res.json(banners);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -50,9 +38,6 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
   try {
     const bannerData = {
       image: req.file ? `/uploads/${req.file.filename}` : "",
-      link: req.body.link || "",
-      order: req.body.order || 0,
-      isActive: req.body.isActive === "true" || req.body.isActive === true,
     };
 
     const banner = new Banner(bannerData);
@@ -68,11 +53,7 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
 // @access  Private
 router.put("/:id", auth, upload.single("image"), async (req, res) => {
   try {
-    const updateData = {
-      link: req.body.link,
-      order: req.body.order,
-      isActive: req.body.isActive === "true" || req.body.isActive === true,
-    };
+    const updateData = {};
 
     if (req.file) {
       updateData.image = `/uploads/${req.file.filename}`;
