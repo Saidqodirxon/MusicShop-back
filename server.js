@@ -20,6 +20,7 @@ const allowedOrigins = [
   "https://music-shop.uz",
   "https://www.music-shop.uz",
   "http://localhost:3000",
+  "http://localhost:8808",
 ];
 
 app.use(

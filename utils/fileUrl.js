@@ -11,25 +11,25 @@ function getFileUrl(req, pathOrFilename) {
     return pathOrFilename;
   }
 
-  // Prefer building URL from the incoming request (works for local dev and proxied setups)
-  let base;
-  try {
-    if (req && typeof req.get === "function") {
-      const proto =
-        req.protocol ||
-        (req.headers && req.headers["x-forwarded-proto"]) ||
-        "http";
-      const host = req.get("host");
-      if (host) {
-        base = `${proto.replace(/,.*/, "").replace(/\s+/g, "")}://${host}`;
+  // Prefer an explicit BASE_URL (set in production). If not provided,
+  // fall back to building from the incoming request so local dev still works.
+  let base = (process.env.BASE_URL || "").replace(/\/$/, "");
+  if (!base) {
+    try {
+      if (req && typeof req.get === "function") {
+        const proto = (req.protocol || (req.headers && req.headers["x-forwarded-proto"])) || "http";
+        const host = req.get("host");
+        if (host) {
+          base = `${proto.replace(/,.*/, "").replace(/\s+/g, "")}://${host}`;
+        }
       }
+    } catch (e) {
+      base = undefined;
     }
-  } catch (e) {
-    base = undefined;
   }
 
   if (!base) {
-    base = (process.env.BASE_URL || DEFAULT_BASE).replace(/\/$/, "");
+    base = DEFAULT_BASE;
   }
 
   let filename = pathOrFilename;
