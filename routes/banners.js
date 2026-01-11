@@ -36,8 +36,15 @@ router.get("/:id", async (req, res) => {
 // @access  Private
 router.post("/", auth, upload.single("image"), async (req, res) => {
   try {
+    const getFileUrl = (req, filename) => {
+      if (!filename) return "";
+      const proto = req.protocol;
+      const host = req.get("host");
+      return `${proto}://${host}/uploads/${filename}`;
+    };
+
     const bannerData = {
-      image: req.file ? `/uploads/${req.file.filename}` : "",
+      image: req.file ? getFileUrl(req, req.file.filename) : "",
     };
 
     const banner = new Banner(bannerData);
@@ -56,7 +63,14 @@ router.put("/:id", auth, upload.single("image"), async (req, res) => {
     const updateData = {};
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      const getFileUrl = (req, filename) => {
+        if (!filename) return "";
+        const proto = req.protocol;
+        const host = req.get("host");
+        return `${proto}://${host}/uploads/${filename}`;
+      };
+
+      updateData.image = getFileUrl(req, req.file.filename);
     }
 
     const banner = await Banner.findByIdAndUpdate(req.params.id, updateData, {
