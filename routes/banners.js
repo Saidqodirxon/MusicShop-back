@@ -49,10 +49,6 @@ router.get("/:id", async (req, res) => {
 router.post("/", auth, upload.single("image"), async (req, res) => {
   try {
     const bannerData = {
-      title: JSON.parse(req.body.title),
-      description: req.body.description
-        ? JSON.parse(req.body.description)
-        : { uz: "", ru: "", en: "" },
       image: req.file ? `/uploads/${req.file.filename}` : "",
       link: req.body.link || "",
       order: req.body.order || 0,
@@ -73,14 +69,6 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
 router.put("/:id", auth, upload.single("image"), async (req, res) => {
   try {
     const updateData = {
-      title:
-        typeof req.body.title === "string"
-          ? JSON.parse(req.body.title)
-          : req.body.title,
-      description:
-        typeof req.body.description === "string"
-          ? JSON.parse(req.body.description)
-          : req.body.description,
       link: req.body.link,
       order: req.body.order,
       isActive: req.body.isActive === "true" || req.body.isActive === true,
