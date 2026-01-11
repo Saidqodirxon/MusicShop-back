@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs");
 
 dotenv.config();
 
@@ -36,7 +37,9 @@ app.use(
 );
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+const uploadsPath = path.join(__dirname, "uploads");
+console.log("Serving uploads from:", uploadsPath, "exists:", fs.existsSync(uploadsPath));
+app.use("/uploads", express.static(uploadsPath));
 
 // Database connection
 mongoose
