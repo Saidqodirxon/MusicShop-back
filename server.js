@@ -12,10 +12,13 @@ const app = express();
 app.set("trust proxy", true);
 
 // Middleware
-// Allow only the admin frontends to access API via CORS
+// Allow admin and public frontends to access API via CORS (and localhost for dev)
 const allowedOrigins = [
   "https://admin.music-shop.uz",
   "https://www.admin.music-shop.uz",
+  "https://music-shop.uz",
+  "https://www.music-shop.uz",
+  "http://localhost:3000",
 ];
 
 app.use(
