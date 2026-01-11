@@ -3,6 +3,7 @@ const router = express.Router();
 const HowWeWork = require("../models/HowWeWork");
 const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { getFileUrl } = require("../utils/fileUrl");
 
 // @route   GET api/how-we-work
 // @desc    Get all how we work items
@@ -39,7 +40,7 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
     const itemData = {
       title: JSON.parse(req.body.title),
       description: JSON.parse(req.body.description),
-      image: req.file ? `/uploads/${req.file.filename}` : "",
+      image: req.file ? getFileUrl(req, req.file.filename) : "",
       order: req.body.order || 0,
     };
 
@@ -69,7 +70,7 @@ router.put("/:id", auth, upload.single("image"), async (req, res) => {
     };
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = getFileUrl(req, req.file.filename);
     }
 
     const item = await HowWeWork.findByIdAndUpdate(req.params.id, updateData, {

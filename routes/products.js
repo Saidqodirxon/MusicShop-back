@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require("../models/Product");
 const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { getFileUrl } = require("../utils/fileUrl");
 
 // @route   GET api/products
 // @desc    Get all products
@@ -56,7 +57,7 @@ router.post("/", auth, upload.array("images", 4), async (req, res) => {
       isTopProduct: req.body.isTopProduct === "true",
       price: req.body.price,
       images: req.files
-        ? req.files.map((file) => `/uploads/${file.filename}`)
+        ? req.files.map((file) => getFileUrl(req, file.filename))
         : [],
     };
 
@@ -96,14 +97,14 @@ router.put("/:id", auth, upload.array("images", 4), async (req, res) => {
         typeof req.body.existingImages === "string"
           ? JSON.parse(req.body.existingImages)
           : req.body.existingImages;
-      updateData.images = existingImages;
+      updateData.images = existingImages.map((img) => getFileUrl(req, img));
     } else {
       updateData.images = [];
     }
 
     // Add new uploaded images
     if (req.files && req.files.length > 0) {
-      const newImages = req.files.map((file) => `/uploads/${file.filename}`);
+      const newImages = req.files.map((file) => getFileUrl(req, file.filename));
       updateData.images = [...updateData.images, ...newImages];
     }
 

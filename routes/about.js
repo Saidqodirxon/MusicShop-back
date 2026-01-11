@@ -3,6 +3,7 @@ const router = express.Router();
 const About = require("../models/About");
 const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { getFileUrl } = require("../utils/fileUrl");
 
 // @route   GET api/about
 // @desc    Get about info
@@ -34,10 +35,10 @@ router.post(
       };
 
       if (req.files.banner) {
-        aboutData.banner = `/uploads/${req.files.banner[0].filename}`;
+        aboutData.banner = getFileUrl(req, req.files.banner[0].filename);
       }
       if (req.files.image) {
-        aboutData.image = `/uploads/${req.files.image[0].filename}`;
+        aboutData.image = getFileUrl(req, req.files.image[0].filename);
       }
 
       let about = await About.findOne();
@@ -82,10 +83,10 @@ router.put(
       };
 
       if (req.files && req.files.banner) {
-        updateData.banner = `/uploads/${req.files.banner[0].filename}`;
+        updateData.banner = getFileUrl(req, req.files.banner[0].filename);
       }
       if (req.files && req.files.image) {
-        updateData.image = `/uploads/${req.files.image[0].filename}`;
+        updateData.image = getFileUrl(req, req.files.image[0].filename);
       }
 
       const about = await About.findByIdAndUpdate(req.params.id, updateData, {

@@ -3,6 +3,7 @@ const router = express.Router();
 const News = require("../models/News");
 const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { getFileUrl } = require("../utils/fileUrl");
 
 // @route   GET api/news
 // @desc    Get all news
@@ -39,7 +40,7 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
     const newsData = {
       title: JSON.parse(req.body.title),
       content: JSON.parse(req.body.content),
-      image: req.file ? `/uploads/${req.file.filename}` : "",
+      image: req.file ? getFileUrl(req, req.file.filename) : "",
       date: req.body.date || Date.now(),
     };
 
@@ -69,7 +70,7 @@ router.put("/:id", auth, upload.single("image"), async (req, res) => {
     };
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = getFileUrl(req, req.file.filename);
     }
 
     const newsItem = await News.findByIdAndUpdate(req.params.id, updateData, {

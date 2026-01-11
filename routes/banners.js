@@ -3,6 +3,7 @@ const router = express.Router();
 const Banner = require("../models/Banner");
 const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { getFileUrl } = require("../utils/fileUrl");
 
 // @route   GET api/banners
 // @desc    Get all banners
@@ -36,13 +37,6 @@ router.get("/:id", async (req, res) => {
 // @access  Private
 router.post("/", auth, upload.single("image"), async (req, res) => {
   try {
-    const getFileUrl = (req, filename) => {
-      if (!filename) return "";
-      const proto = req.protocol;
-      const host = req.get("host");
-      return `${proto}://${host}/uploads/${filename}`;
-    };
-
     const bannerData = {
       image: req.file ? getFileUrl(req, req.file.filename) : "",
     };
@@ -63,13 +57,6 @@ router.put("/:id", auth, upload.single("image"), async (req, res) => {
     const updateData = {};
 
     if (req.file) {
-      const getFileUrl = (req, filename) => {
-        if (!filename) return "";
-        const proto = req.protocol;
-        const host = req.get("host");
-        return `${proto}://${host}/uploads/${filename}`;
-      };
-
       updateData.image = getFileUrl(req, req.file.filename);
     }
 

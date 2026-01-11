@@ -3,6 +3,7 @@ const router = express.Router();
 const Case = require("../models/Case");
 const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
+const { getFileUrl } = require("../utils/fileUrl");
 
 // @route   GET api/cases
 // @desc    Get all cases
@@ -46,9 +47,9 @@ router.post(
       const caseData = {
         title: JSON.parse(req.body.title),
         description: JSON.parse(req.body.description),
-        image: req.files.image ? `/uploads/${req.files.image[0].filename}` : "",
+        image: req.files.image ? getFileUrl(req, req.files.image[0].filename) : "",
         document: req.files.document
-          ? `/uploads/${req.files.document[0].filename}`
+          ? getFileUrl(req, req.files.document[0].filename)
           : "",
       };
 
@@ -85,10 +86,13 @@ router.put(
       };
 
       if (req.files.image) {
-        updateData.image = `/uploads/${req.files.image[0].filename}`;
+        updateData.image = getFileUrl(req, req.files.image[0].filename);
       }
       if (req.files.document) {
-        updateData.document = `/uploads/${req.files.document[0].filename}`;
+        updateData.document = getFileUrl(
+          req,
+          req.files.document[0].filename
+        );
       }
 
       const caseItem = await Case.findByIdAndUpdate(req.params.id, updateData, {
