@@ -17,7 +17,10 @@ function getFileUrl(req, pathOrFilename) {
   if (!base) {
     try {
       if (req && typeof req.get === "function") {
-        const proto = (req.protocol || (req.headers && req.headers["x-forwarded-proto"])) || "http";
+        const proto =
+          req.protocol ||
+          (req.headers && req.headers["x-forwarded-proto"]) ||
+          "http";
         const host = req.get("host");
         if (host) {
           base = `${proto.replace(/,.*/, "").replace(/\s+/g, "")}://${host}`;
