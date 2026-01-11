@@ -44,6 +44,7 @@ mongoose
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/applications", require("./routes/applications"));
+app.use("/api/banners", require("./routes/banners"));
 app.use("/api/what-we-do", require("./routes/whatWeDo"));
 app.use("/api/who-we-work-for", require("./routes/whoWeWorkFor"));
 app.use("/api/how-we-work", require("./routes/howWeWork"));
