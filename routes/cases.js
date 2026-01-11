@@ -47,7 +47,9 @@ router.post(
       const caseData = {
         title: JSON.parse(req.body.title),
         description: JSON.parse(req.body.description),
-        image: req.files.image ? getFileUrl(req, req.files.image[0].filename) : "",
+        image: req.files.image
+          ? getFileUrl(req, req.files.image[0].filename)
+          : "",
         document: req.files.document
           ? getFileUrl(req, req.files.document[0].filename)
           : "",
@@ -89,10 +91,7 @@ router.put(
         updateData.image = getFileUrl(req, req.files.image[0].filename);
       }
       if (req.files.document) {
-        updateData.document = getFileUrl(
-          req,
-          req.files.document[0].filename
-        );
+        updateData.document = getFileUrl(req, req.files.document[0].filename);
       }
 
       const caseItem = await Case.findByIdAndUpdate(req.params.id, updateData, {
