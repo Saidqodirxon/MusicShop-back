@@ -1,8 +1,36 @@
 const DEFAULT_BASE = "https://back.music-shop.uz";
 
-function getFileUrl(_req, pathOrFilename) {
+function getFileUrl(req, pathOrFilename) {
   if (!pathOrFilename) return "";
-  const base = (process.env.BASE_URL || DEFAULT_BASE).replace(/\/$/, "");
+
+  // If the value is already an absolute URL, return it unchanged
+  if (
+    typeof pathOrFilename === "string" &&
+    /^https?:\/\//i.test(pathOrFilename)
+  ) {
+    return pathOrFilename;
+  }
+
+  // Prefer building URL from the incoming request (works for local dev and proxied setups)
+  let base;
+  try {
+    if (req && typeof req.get === "function") {
+      const proto =
+        req.protocol ||
+        (req.headers && req.headers["x-forwarded-proto"]) ||
+        "http";
+      const host = req.get("host");
+      if (host) {
+        base = `${proto.replace(/,.*/, "").replace(/\s+/g, "")}://${host}`;
+      }
+    }
+  } catch (e) {
+    base = undefined;
+  }
+
+  if (!base) {
+    base = (process.env.BASE_URL || DEFAULT_BASE).replace(/\/$/, "");
+  }
 
   let filename = pathOrFilename;
   if (typeof filename !== "string") return "";
