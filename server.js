@@ -21,8 +21,12 @@ const allowedOrigins = [
   "https://www.music-shop.uz",
   "http://localhost:3000",
   "http://localhost:8808",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "music-shop.uz",
+  "www.music-shop.uz",
 ];
-
+  
 app.use(
   cors({
     origin: function (origin, callback) {
