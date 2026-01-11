@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 // Trust proxy so req.protocol reflects upstream protocol (https when proxied)
-app.set('trust proxy', true);
+app.set("trust proxy", true);
 
 // Middleware
 // Allow only the admin frontends to access API via CORS
