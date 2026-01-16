@@ -4,7 +4,13 @@ const applicationSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ["standard", "calculate_project"],
+      enum: [
+        "consultation",
+        "contact",
+        "calculate_project",
+        "feedback",
+        "call_order",
+      ],
       required: true,
     },
     name: {
@@ -13,7 +19,7 @@ const applicationSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: false,
     },
     phone: {
       type: String,
@@ -21,6 +27,7 @@ const applicationSchema = new mongoose.Schema(
     },
     message: {
       type: String,
+      required: false,
     },
     status: {
       type: String,
