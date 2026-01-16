@@ -48,6 +48,16 @@ router.post("/", async (req, res) => {
 
     res.status(201).json(application);
   } catch (err) {
+    console.error("Application creation error:", err);
+    if (err.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: Object.keys(err.errors).map((key) => ({
+          field: key,
+          message: err.errors[key].message,
+        })),
+      });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
