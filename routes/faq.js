@@ -39,6 +39,19 @@ router.post("/", auth, async (req, res) => {
     await faq.save();
     res.status(201).json(faq);
   } catch (err) {
+    console.error("Error creating FAQ:", err);
+    if (err.code === 11000) {
+      return res.status(400).json({ 
+        message: "Duplicate entry error", 
+        error: "A FAQ with this value already exists" 
+      });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ 
+        message: "Validation error", 
+        error: err.message 
+      });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
@@ -50,6 +63,7 @@ router.put("/:id", auth, async (req, res) => {
   try {
     const faq = await FAQ.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
+      runValidators: true,
     });
 
     if (!faq) {
@@ -57,6 +71,19 @@ router.put("/:id", auth, async (req, res) => {
     }
     res.json(faq);
   } catch (err) {
+    console.error("Error updating FAQ:", err);
+    if (err.code === 11000) {
+      return res.status(400).json({ 
+        message: "Duplicate entry error", 
+        error: "A FAQ with this value already exists" 
+      });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ 
+        message: "Validation error", 
+        error: err.message 
+      });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });

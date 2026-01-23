@@ -45,6 +45,19 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
     await banner.save();
     res.status(201).json(banner);
   } catch (err) {
+    console.error("Error creating banner:", err);
+    if (err.code === 11000) {
+      return res.status(400).json({ 
+        message: "Duplicate entry error", 
+        error: "A banner with this value already exists" 
+      });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ 
+        message: "Validation error", 
+        error: err.message 
+      });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });

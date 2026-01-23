@@ -39,6 +39,19 @@ router.post("/", auth, async (req, res) => {
     await category.save();
     res.status(201).json(category);
   } catch (err) {
+    console.error("Error creating category:", err);
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: "Duplicate entry error",
+        error: "A category with this value already exists",
+      });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        error: err.message,
+      });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
@@ -50,12 +63,26 @@ router.put("/:id", auth, async (req, res) => {
   try {
     const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
+      runValidators: true,
     });
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
     res.json(category);
   } catch (err) {
+    console.error("Error updating category:", err);
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: "Duplicate entry error",
+        error: "A category with this value already exists",
+      });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        error: err.message,
+      });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
