@@ -61,15 +61,15 @@ router.post(
     } catch (err) {
       console.error("Error creating case:", err);
       if (err.code === 11000) {
-        return res.status(400).json({ 
-          message: "Duplicate entry error", 
-          error: "A case with this value already exists" 
+        return res.status(400).json({
+          message: "Duplicate entry error",
+          error: "A case with this value already exists",
         });
       }
       if (err.name === "ValidationError") {
-        return res.status(400).json({ 
-          message: "Validation error", 
-          error: err.message 
+        return res.status(400).json({
+          message: "Validation error",
+          error: err.message,
         });
       }
       res.status(500).json({ message: "Server error", error: err.message });

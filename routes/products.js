@@ -68,15 +68,15 @@ router.post("/", auth, upload.array("images", 4), async (req, res) => {
   } catch (err) {
     console.error("Error creating product:", err);
     if (err.code === 11000) {
-      return res.status(400).json({ 
-        message: "Duplicate entry error", 
-        error: "A product with this value already exists" 
+      return res.status(400).json({
+        message: "Duplicate entry error",
+        error: "A product with this value already exists",
       });
     }
     if (err.name === "ValidationError") {
-      return res.status(400).json({ 
-        message: "Validation error", 
-        error: err.message 
+      return res.status(400).json({
+        message: "Validation error",
+        error: err.message,
       });
     }
     res.status(500).json({ message: "Server error", error: err.message });

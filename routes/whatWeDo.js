@@ -41,15 +41,15 @@ router.post("/", auth, async (req, res) => {
   } catch (err) {
     console.error("Error creating what-we-do item:", err);
     if (err.code === 11000) {
-      return res.status(400).json({ 
-        message: "Duplicate entry error", 
-        error: "An item with this value already exists" 
+      return res.status(400).json({
+        message: "Duplicate entry error",
+        error: "An item with this value already exists",
       });
     }
     if (err.name === "ValidationError") {
-      return res.status(400).json({ 
-        message: "Validation error", 
-        error: err.message 
+      return res.status(400).json({
+        message: "Validation error",
+        error: err.message,
       });
     }
     res.status(500).json({ message: "Server error", error: err.message });
@@ -72,15 +72,15 @@ router.put("/:id", auth, async (req, res) => {
   } catch (err) {
     console.error("Error updating what-we-do item:", err);
     if (err.code === 11000) {
-      return res.status(400).json({ 
-        message: "Duplicate entry error", 
-        error: "An item with this value already exists" 
+      return res.status(400).json({
+        message: "Duplicate entry error",
+        error: "An item with this value already exists",
       });
     }
     if (err.name === "ValidationError") {
-      return res.status(400).json({ 
-        message: "Validation error", 
-        error: err.message 
+      return res.status(400).json({
+        message: "Validation error",
+        error: err.message,
       });
     }
     res.status(500).json({ message: "Server error", error: err.message });
